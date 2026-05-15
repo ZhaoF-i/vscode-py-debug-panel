@@ -1,8 +1,8 @@
 {
   "name": "vscode-py-debug-panel",
   "displayName": "Python Debug Panel",
-  "description": "Paste shell-style Python script arguments in a sidebar panel and launch VS Code debugging.",
-  "version": "0.1.0",
+  "description": "Paste shell-style Python script arguments in a sidebar panel and run or debug Python files.",
+  "version": "0.1.1",
   "publisher": "zhaofei",
   "license": "MIT",
   "repository": {
@@ -24,6 +24,7 @@
     "onView:pythonDebugPanel.view",
     "onCommand:pythonDebugPanel.open",
     "onCommand:pythonDebugPanel.debugSelected",
+    "onCommand:pythonDebugPanel.runSelected",
     "onCommand:pythonDebugPanel.refreshFiles"
   ],
   "main": "./out/src/extension.js",
@@ -48,6 +49,10 @@
       {
         "command": "pythonDebugPanel.debugSelected",
         "title": "Python Debug Panel: Debug Selected"
+      },
+      {
+        "command": "pythonDebugPanel.runSelected",
+        "title": "Python Debug Panel: Run Selected"
       },
       {
         "command": "pythonDebugPanel.refreshFiles",

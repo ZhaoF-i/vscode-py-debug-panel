@@ -1,6 +1,6 @@
 # Python Debug Panel
 
-`vscode-py-debug-panel` is a VS Code extension that lets you paste shell-style multiline arguments, choose a Python file from the current workspace, and launch a Python debug session from a sidebar panel.
+`vscode-py-debug-panel` is a VS Code extension that lets you paste shell-style multiline arguments, choose a Python file from the current workspace, and launch or debug it from a sidebar panel.
 
 ## Features
 
@@ -8,7 +8,8 @@
 - Workspace Python file selector, defaulting to the active Python editor when possible.
 - Multiline argument input using shell-style parsing.
 - Recent argument history, stored per workspace.
-- Commands for opening the panel, refreshing files, and starting debug.
+- `Run` and `Debug` buttons that reuse the same selected file and parsed arguments.
+- Commands for opening the panel, refreshing files, running, and debugging.
 
 Example argument block:
 
@@ -62,7 +63,7 @@ To debug the extension:
 2. Press `F5`.
 3. In the Extension Development Host, open a Python workspace.
 4. Open the `Python Debug` activity bar item.
-5. Select a Python file, paste arguments, and click `Debug`.
+5. Select a Python file, paste arguments, and click `Run` or `Debug`.
 
 ## Packaging
 
@@ -81,7 +82,7 @@ npm run package
 Install the generated package from VS Code:
 
 ```sh
-code --install-extension vscode-py-debug-panel-0.1.0.vsix
+code --install-extension vscode-py-debug-panel-0.1.1.vsix
 ```
 
 ## Settings
@@ -94,4 +95,5 @@ code --install-extension vscode-py-debug-panel-0.1.0.vsix
 
 - `Python Debug Panel: Open`
 - `Python Debug Panel: Debug Selected`
+- `Python Debug Panel: Run Selected`
 - `Python Debug Panel: Refresh Files`

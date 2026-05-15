@@ -39,6 +39,9 @@ export function activate(context: vscode.ExtensionContext): void {
     vscode.commands.registerCommand("pythonDebugPanel.debugSelected", async () => {
       await provider.debugCurrent();
     }),
+    vscode.commands.registerCommand("pythonDebugPanel.runSelected", async () => {
+      await provider.runCurrent();
+    }),
     vscode.commands.registerCommand("pythonDebugPanel.refreshFiles", async () => {
       await provider.refreshFiles();
     })
@@ -81,6 +84,10 @@ class PythonDebugPanelProvider implements vscode.WebviewViewProvider {
           case "debug":
             this.patchState(message);
             await this.debugCurrent();
+            break;
+          case "run":
+            this.patchState(message);
+            await this.runCurrent();
             break;
           case "refresh":
             this.patchState(message);
@@ -132,14 +139,22 @@ class PythonDebugPanelProvider implements vscode.WebviewViewProvider {
   }
 
   async debugCurrent(): Promise<void> {
+    await this.launchCurrent("debug");
+  }
+
+  async runCurrent(): Promise<void> {
+    await this.launchCurrent("run");
+  }
+
+  private async launchCurrent(mode: "debug" | "run"): Promise<void> {
     const workspaceFolder = getPrimaryWorkspaceFolder();
     if (!workspaceFolder) {
-      this.postState({ error: "Open a workspace folder before starting debug." });
+      this.postState({ error: `Open a workspace folder before starting ${mode}.` });
       return;
     }
 
     if (!this.state.selectedFile) {
-      this.postState({ error: "Select a Python file before starting debug." });
+      this.postState({ error: `Select a Python file before starting ${mode}.` });
       return;
     }
 
@@ -166,8 +181,9 @@ class PythonDebugPanelProvider implements vscode.WebviewViewProvider {
     const debugType = config.get<string>("debugType", "debugpy");
     const consoleType = config.get<string>("console", "integratedTerminal");
     const selectedWorkspaceFolder = vscode.workspace.getWorkspaceFolder(programUri) ?? workspaceFolder;
+    const actionLabel = mode === "debug" ? "Debug" : "Run";
     const debugConfig: vscode.DebugConfiguration = {
-      name: `Debug ${path.basename(this.state.selectedFile)}`,
+      name: `${actionLabel} ${path.basename(this.state.selectedFile)}`,
       type: debugType,
       request: "launch",
       program: this.state.selectedFile,
@@ -176,11 +192,15 @@ class PythonDebugPanelProvider implements vscode.WebviewViewProvider {
       console: consoleType
     };
 
-    const started = await vscode.debug.startDebugging(selectedWorkspaceFolder, debugConfig);
+    const started = await vscode.debug.startDebugging(
+      selectedWorkspaceFolder,
+      debugConfig,
+      mode === "run" ? { noDebug: true } : undefined
+    );
     if (started) {
-      this.postState({ message: `Started debug with ${args.length} argument(s).` });
+      this.postState({ message: `Started ${mode} with ${args.length} argument(s).` });
     } else {
-      this.postState({ error: "VS Code did not start the debug session." });
+      this.postState({ error: `VS Code did not start the ${mode} session.` });
     }
   }
 
@@ -375,9 +395,10 @@ class PythonDebugPanelProvider implements vscode.WebviewViewProvider {
 
   <div class="row">
     <button id="debugButton">Debug</button>
-    <button id="refreshButton" class="secondary">Refresh</button>
+    <button id="runButton">Run</button>
   </div>
   <div class="row">
+    <button id="refreshButton" class="secondary">Refresh</button>
     <button id="clearButton" class="secondary">Clear</button>
   </div>
 
@@ -391,6 +412,7 @@ class PythonDebugPanelProvider implements vscode.WebviewViewProvider {
     const historySelect = document.getElementById("historySelect");
     const argsText = document.getElementById("argsText");
     const debugButton = document.getElementById("debugButton");
+    const runButton = document.getElementById("runButton");
     const refreshButton = document.getElementById("refreshButton");
     const clearButton = document.getElementById("clearButton");
     const status = document.getElementById("status");
@@ -449,6 +471,7 @@ class PythonDebugPanelProvider implements vscode.WebviewViewProvider {
       historySelect.disabled = !state.history.length;
       argsText.disabled = !hasWorkspace;
       debugButton.disabled = !hasWorkspace || !hasFiles;
+      runButton.disabled = !hasWorkspace || !hasFiles;
     }
 
     function firstLine(value) {
@@ -459,6 +482,7 @@ class PythonDebugPanelProvider implements vscode.WebviewViewProvider {
     fileSelect.addEventListener("change", () => post("stateChanged"));
     argsText.addEventListener("input", () => post("stateChanged"));
     debugButton.addEventListener("click", () => post("debug"));
+    runButton.addEventListener("click", () => post("run"));
     refreshButton.addEventListener("click", () => post("refresh"));
     clearButton.addEventListener("click", () => post("clear"));
     historySelect.addEventListener("change", () => {

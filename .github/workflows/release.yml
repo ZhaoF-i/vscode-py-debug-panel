@@ -52,4 +52,4 @@ jobs:
           gh release create "$RELEASE_TAG" vscode-py-debug-panel.vsix \
             --repo "$GITHUB_REPOSITORY" \
             --title "Python Debug Panel ${RELEASE_TAG}" \
-            --notes "Initial release of Python Debug Panel. Download the VSIX asset and install it in VS Code."
+            --notes "Download the VSIX asset and install it in VS Code."
