@@ -14,11 +14,11 @@ Example argument block:
 
 ```sh
 --inputs \
-/mnt/raid2/userspace/zhaofei/result/PA_ANC_codex/PANDAR_JumpPath_PJ_synPS_2K_rirNorm8/ablation/PA-ANC_win64_checkNorm_checkData_dataAug_noiseAwareLoss/test_results/ \
-/mnt/raid2/userspace/zhaofei/result/PA_ANC_codex/PANDAR_JumpPath_PJ_synPS_2K_rirNorm8/compare/ARN_win4ms_hop2ms/test_results/ \
+/path/to/results/project-a/experiment-baseline/test_results/ \
+/path/to/results/project-a/experiment-candidate/test_results/ \
 --labels \
-PA-ANC \
-ARN \
+Baseline \
+Candidate \
 --save_file \
 compare
 ```
@@ -28,11 +28,11 @@ The panel parses that into:
 ```json
 [
   "--inputs",
-  "/mnt/raid2/userspace/zhaofei/result/PA_ANC_codex/PANDAR_JumpPath_PJ_synPS_2K_rirNorm8/ablation/PA-ANC_win64_checkNorm_checkData_dataAug_noiseAwareLoss/test_results/",
-  "/mnt/raid2/userspace/zhaofei/result/PA_ANC_codex/PANDAR_JumpPath_PJ_synPS_2K_rirNorm8/compare/ARN_win4ms_hop2ms/test_results/",
+  "/path/to/results/project-a/experiment-baseline/test_results/",
+  "/path/to/results/project-a/experiment-candidate/test_results/",
   "--labels",
-  "PA-ANC",
-  "ARN",
+  "Baseline",
+  "Candidate",
   "--save_file",
   "compare"
 ]
