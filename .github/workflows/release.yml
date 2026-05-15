@@ -1,0 +1,55 @@
+name: Release VSIX
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Release tag, for example v0.1.0"
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Build VSIX and create release
+    runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.tag || github.ref }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Compile
+        run: npm run compile
+
+      - name: Test
+        run: npm test
+
+      - name: Package VSIX
+        run: npm run package -- --out vscode-py-debug-panel.vsix
+
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ github.event.inputs.tag || github.ref_name }}
+        run: |
+          gh release create "$RELEASE_TAG" vscode-py-debug-panel.vsix \
+            --repo "$GITHUB_REPOSITORY" \
+            --title "Python Debug Panel ${RELEASE_TAG}" \
+            --notes "Initial release of Python Debug Panel. Download the VSIX asset and install it in VS Code."
