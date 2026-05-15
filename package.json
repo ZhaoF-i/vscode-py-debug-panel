@@ -5,6 +5,14 @@
   "version": "0.1.0",
   "publisher": "zhaofei",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ZhaoF-i/vscode-py-debug-panel.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ZhaoF-i/vscode-py-debug-panel/issues"
+  },
+  "homepage": "https://github.com/ZhaoF-i/vscode-py-debug-panel#readme",
   "engines": {
     "vscode": "^1.86.0"
   },
@@ -26,6 +34,7 @@
     "package": "vsce package"
   },
   "devDependencies": {
+    "@vscode/vsce": "^2.32.0",
     "@types/node": "^20.11.30",
     "@types/vscode": "^1.86.0",
     "typescript": "^5.4.2"

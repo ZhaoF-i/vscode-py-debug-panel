@@ -1,0 +1,10 @@
+.git/**
+.github/**
+.vscode/**
+src/**
+test/**
+tsconfig.json
+SETUP_GITHUB.md
+*.vsix
+node_modules/**
+*.map
