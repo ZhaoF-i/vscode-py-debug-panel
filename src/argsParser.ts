@@ -27,7 +27,7 @@ export function parseShellArgs(input: string): string[] {
 
     if (char === "\\") {
       const skip = lineContinuationLength(input, index);
-      if (skip > 0 && quote !== "'") {
+      if (skip > 0) {
         index += skip - 1;
         continue;
       }
